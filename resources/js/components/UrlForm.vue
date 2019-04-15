@@ -10,9 +10,7 @@
                             <input v-model="url"/>
                             <button class="btn btn-info" v-on:click="send">Add</button>
 
-                            <div class="errors">
-                            <div v-for="(msg) in errors">{{msg}}</div>
-                            </div>
+                            <div class="errors" v-show="error" style="color: red">{{error}}</div>
                         </div>
 
 
@@ -59,19 +57,25 @@
 
 <script>
     import axios from 'axios';
+    import validator from 'validator'
 
     export default {
         methods: {
             send: function () {
 
-                let params = {
-                    url: this.url
-                };
-                axios.post('/', params).then((r) => {
-                    this.loadData();
-                }).catch((e) => {
-                    console.log(e);
-                })
+                if (this.validateUrl(this.url)) {
+                    this.error = '';
+                    let params = {
+                        url: this.url
+                    };
+                    axios.post('/', params).then((r) => {
+                        this.loadData();
+                    }).catch((e) => {
+                        console.log(e);
+                    })
+                } else {
+                    this.error = "Invalid url";
+                }
             },
 
             loadData: function() {
@@ -98,6 +102,9 @@
                 }, 1000);
 
             },
+            validateUrl: function (url) {
+                return validator.isURL(url);
+            },
         },
         mounted() {
             console.log('Component mounted.');
@@ -108,7 +115,7 @@
             return {
                 links: [],
                 history: [],
-                errors: [],
+                error: '',
                 url: ''
             };
         }
