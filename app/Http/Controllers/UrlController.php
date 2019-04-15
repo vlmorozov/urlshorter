@@ -2,18 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Url;
+use function GuzzleHttp\describe_type;
 use Illuminate\Http\Request;
 
-class Url extends Controller
+class UrlController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(UrlPresenter $urlPresenter)
     {
         //
+        $urls = Url::query()
+            ->limit(10)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'data' => $urlPresenter->table($urls),
+        ]);
     }
 
     /**
@@ -32,15 +42,27 @@ class Url extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UrlStoreRequest $storeRequest)
     {
+        $url = $storeRequest->input('url');
         //
+        $urlModel = Url::firstOrCreate([
+            'link' => $url
+        ]);
+
+        return response()->json([
+            'id' => $urlModel->id,
+            'link' => $urlModel->short_link
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
+     *
+     * +
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)

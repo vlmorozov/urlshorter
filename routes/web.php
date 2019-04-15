@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/list', 'UrlController@index');
+Route::post('/', 'UrlController@store');
+
+Route::get('/history', 'IndexController@history');
+
+
+Route::get('/{code}', 'IndexController@index');
+
+

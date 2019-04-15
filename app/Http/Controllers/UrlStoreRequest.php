@@ -1,15 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: work
- * Date: 14.04.19
- * Time: 16:20
- */
 
 namespace App\Http\Controllers;
 
 
-class UrlStoreRequest
-{
+use Illuminate\Foundation\Http\FormRequest;
 
+class UrlStoreRequest extends FormRequest
+{
+    public function rules()
+    {
+        return [
+            'url' => 'required',
+        ];
+    }
 }

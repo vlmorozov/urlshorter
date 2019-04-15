@@ -28,15 +28,15 @@ class IndexController extends Controller
 
     }
 
-    public function history()
+    public function history(HistoryPresenter $historyPresenter)
     {
-        $history = History::query()
+        $history = History::with('url')
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
         return response()->json([
-            'data' => $history
+            'data' => $historyPresenter->table($history)
         ]);
     }
 }
